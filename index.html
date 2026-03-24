@@ -1,160 +1,159 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8">
-<title>Date Vraag</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Date Vraag</title>
 
-<style>
-body {
-    margin: 0;
-    padding: 0;
-    font-family: "Comic Sans MS", cursive;
+    <style>
+        /* Force the page to be full height on all devices */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
 
-    /* NEW BACKGROUND */
-    background:
-        linear-gradient(rgba(255, 192, 203, 0.5), rgba(255, 105, 180, 0.5)),
-        url('dianthus.jpg'); /* soft pink flowers */
+        body {
+            font-family: "Comic Sans MS", cursive;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow-x: hidden;
 
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+            /* Background stays fixed and covers everything */
+            background:
+                linear-gradient(rgba(255, 192, 203, 0.5), rgba(255, 105, 180, 0.5)),
+                url('dianthus.jpg'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
 
-    text-align: center;
-    overflow: hidden;
-}
+        .container {
+            margin-top: 10vh; 
+            background: rgba(255,255,255,0.9);
+            padding: 40px 20px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
 
-/* container */
-.container {
-    margin-top: 120px;
-    background: rgba(255,255,255,0.85);
-    display: inline-block;
-    padding: 40px 60px;
-    border-radius: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
+        h1 {
+            font-size: clamp(24px, 5vw, 42px); /* Shrinks for phone, grows for laptop */
+            color: #d63384;
+            margin-bottom: 20px;
+        }
 
-h1 {
-    font-size: 42px;
-    color: #d63384;
-}
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-/* Buttons */
-button {
-    padding: 18px 36px;
-    font-size: 22px;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
+        #yesBtn {
+            background-color: #ff4da6;
+            color: white;
+            font-size: 28px;
+        }
 
-#yesBtn {
-    background-color: #ff4da6;
-    color: white;
-    font-size: 30px;
-    margin: 20px;
-}
+        #yesBtn:hover { transform: scale(1.1); }
 
-#yesBtn:hover {
-    transform: scale(1.15);
-    box-shadow: 0 0 20px rgba(255, 77, 166, 0.6);
-}
+        #noBtn {
+            background-color: #888;
+            color: white;
+            font-size: 18px;
+        }
 
-#noBtn {
-    background-color: #888;
-    color: white;
-    font-size: 20px;
-    margin: 20px;
-}
+        #reasonBox {
+            margin-top: 25px;
+            font-weight: bold;
+            color: #d63384;
+            font-size: 20px;
+            min-height: 30px;
+        }
 
-#noBtn:hover {
-    transform: scale(1.05);
-}
+        .heart {
+            position: fixed;
+            font-size: 35px;
+            z-index: 9999;
+            pointer-events: none;
+            animation: rise 2s ease-out forwards;
+        }
 
-/* hearts */
-.heart {
-    position: fixed;
-    font-size: 30px;
-    animation: rise 2s ease-out forwards;
-}
-
-@keyframes rise {
-    0% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-150px) scale(1.8); }
-}
-</style>
+        @keyframes rise {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-300px) scale(2); }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container" id="mainPage">
-    <h1> Хочешь пойти со мной на свидание? </h1>
+    <div class="container" id="mainPage">
+        <h1> Хочешь пойти со мной на свидание? </h1>
+        <button id="yesBtn" onclick="goYes()">JA</button>
+        <button id="noBtn" onclick="goNo()">nee</button>
+        <br><br>
+        <button onclick="generateReason()" style="background-color: #fce4ec; color: #d63384; font-size: 16px;">Waarom ik je leuk vind</button>
+        <div id="reasonBox"></div>
+    </div>
 
-    <button id="yesBtn" onclick="goYes()">JA</button>
-    <button id="noBtn" onclick="goNo()">nee</button>
+    <div class="container" id="yesPage" style="display:none;">
+        <h1>JOEPIE 🎉</h1>
+        <p style="font-size: 20px;"> We kunnen samen klimmen! Ik trakteer je daarna op matcha!💕<br><br>
+        <span style="font-size: 14px; color: #666;">ps: kun je me een screenshot sturen van je antwoord?</span></p>
+    </div>
 
-    <br>
+    <div class="container" id="noPage" style="display:none;">
+        <h1>Geen probleem!</h1>
+        <p style="font-size: 20px;">Hopelijk kunnen we vrienden blijven.<br><br>
+        <span style="font-size: 14px; color: #666;">ps: kun je me een screenshot sturen van je antwoord?</span></p>
+    </div>
 
-    <button onclick="generateReason()">Waarom ik je leuk vind</button>
-    <div id="reasonBox"></div>
-</div>
-
-<div class="container" id="yesPage" style="display:none;">
-    <h1>JOEPIE 🎉</h1>
-    <p> We kunnen samen klimmen! Ik trakteer je daarna op matcha!💕
-	
-	    ps: kun je me een screenshot sturen van je antwoord?
-	</p>
-</div>
-
-<div class="container" id="noPage" style="display:none;">
-    <h1>Geen probleem!</h1>
-    <p>Hopelijk kunnen we vrienden blijven.
-	
-	   ps: kun je me een screenshot sturen van je antwoord?</p>
-</div>
-
-<script>
-function goYes() {
-    showHearts();
-    document.getElementById("mainPage").style.display = "none";
-    document.getElementById("yesPage").style.display = "block";
-}
-
-function goNo() {
-    document.getElementById("mainPage").style.display = "none";
-    document.getElementById("noPage").style.display = "block";
-}
-
-function generateReason() {
-    const reasons = [
-        "Je bent hilarisch",
-        "Je bent enorm intelligent",
-        "Je bent prachtig",
-        "Je hebt een sterk karakter",
-        "Je hebt een mooi hart",
-        "Je bent stiekem echt enorm cool",
-		"Je hebt het mooiste haar ter wereld",
-		"Je hebt een fantastische kledingstijl",
-		"Je stuurt altijd leuke reels",
-    ];
-
-    const random = reasons[Math.floor(Math.random() * reasons.length)];
-    document.getElementById("reasonBox").innerText = random;
-}
-
-function showHearts() {
-    for (let i = 0; i < 15; i++) {
-        let h = document.createElement("div");
-        h.className = "heart";
-        h.innerText = "💗";
-        h.style.left = Math.random() * 100 + "vw";
-        h.style.top = "70vh";
-        document.body.appendChild(h);
-        setTimeout(() => h.remove(), 2000);
+    <script>
+    function goYes() {
+        showHearts();
+        document.getElementById("mainPage").style.display = "none";
+        document.getElementById("yesPage").style.display = "block";
     }
-}
-</script>
 
+    function goNo() {
+        document.getElementById("mainPage").style.display = "none";
+        document.getElementById("noPage").style.display = "block";
+    }
+
+    function generateReason() {
+        const reasons = [
+            "Je bent hilarisch", "Je bent enorm intelligent", "Je bent prachtig",
+            "Je hebt een sterk karakter", "Je hebt een mooi hart",
+            "Je bent stiekem echt enorm cool", "Je hebt het mooiste haar ter wereld",
+            "Je hebt een fantastische kledingstijl", "Je stuurt altijd leuke reels"
+        ];
+        const random = reasons[Math.floor(Math.random() * reasons.length)];
+        document.getElementById("reasonBox").innerText = random;
+    }
+
+    function showHearts() {
+        for (let i = 0; i < 15; i++) {
+            let h = document.createElement("div");
+            h.className = "heart";
+            h.innerText = "💗";
+            h.style.left = Math.random() * 100 + "vw";
+            h.style.top = "80vh";
+            document.body.appendChild(h);
+            setTimeout(() => h.remove(), 2000);
+        }
+    }
+    </script>
 </body>
 </html>
